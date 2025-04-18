@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who's That Pokémon?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    #game-container {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: 50px auto;
+    }
+
+    h1 {
+      color: #ffcc00;
+    }
+
+    #pokemon-shadow {
+      width: 250px;
+      height: 250px;
+      background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'); /* Change this to the Pokémon shadow image */
+      background-size: cover;
+      background-position: center;
+      margin: 20px auto;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      margin-top: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ffcc00;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #ff9900;
+    }
+
+    #feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #d9534f;
+    }
+    
+    #feedback.correct {
+      color: #5bc0de;
+    }
+
+    #return-link {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+      color: #007bff;
+    }
+
+    #return-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="scratch.html" id="return-link">Return to Scratch Page</a>
+
+  <div id="game-container">
+    <h1>Who's That Pokémon?</h1>
+    <div id="pokemon-shadow"></div>
+    <input type="text" id="pokemon-input" placeholder="Enter Pokémon name">
+    <button onclick="checkAnswer()">Guess</button>
+    <button onclick="skipPokemon()">Skip</button> <!-- Skip button -->
+    <div id="feedback"></div>
+  </div>
+
+  <script>
+    // Pokémon data (You can add more Pokémon with shadows and names here)
+    const pokemonData = [
+      { name: 'Pikachu', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' },
+      { name: 'Bulbasaur', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png' },
+      { name: 'Charmander', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png' },
+      { name: 'Squirtle', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png' },
+      { name: 'Jigglypuff', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png' },
+      { name: 'Eevee', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png' },
+      { name: 'Meowth', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/52.png' },
+      { name: 'Pidgey', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/16.png' },
+      { name: 'Rattata', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/19.png' },
+      { name: 'Snorlax', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png' },
+      { name: 'Psyduck', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/54.png' },
+      { name: 'Geodude', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/74.png' },
+      { name: 'Ekans', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/23.png' },
+      { name: 'Ponyta', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/77.png' },
+      { name: 'Magikarp', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png' },
+      { name: 'Zubat', shadowImageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/41.png' },
+    ];
+
+    let currentPokemon = pokemonData[Math.floor(Math.random() * pokemonData.length)];
+
+    // Set the shadow image to the selected Pokémon
+    document.getElementById('pokemon-shadow').style.backgroundImage = `url(${currentPokemon.shadowImageUrl})`;
+
+    function checkAnswer() {
+      const userInput = document.getElementById('pokemon-input').value.trim().toLowerCase();
+      const feedbackElement = document.getElementById('feedback');
+
+      if (userInput === currentPokemon.name.toLowerCase()) {
+        feedbackElement.textContent = 'Correct!';
+        feedbackElement.className = 'correct';
+        // Move to the next Pokémon after correct answer
+        currentPokemon = pokemonData[Math.floor(Math.random() * pokemonData.length)];
+        document.getElementById('pokemon-shadow').style.backgroundImage = `url(${currentPokemon.shadowImageUrl})`;
+        document.getElementById('pokemon-input').value = ''; // Clear the input field
+      } else {
+        feedbackElement.textContent = 'Incorrect';
+        feedbackElement.className = ''; // Don't reset Pokémon after incorrect answer
+      }
+    }
+
+    function skipPokemon() {
+      // Skip to a new Pokémon
+      currentPokemon = pokemonData[Math.floor(Math.random() * pokemonData.length)];
+      document.getElementById('pokemon-shadow').style.backgroundImage = `url(${currentPokemon.shadowImageUrl})`;
+      document.getElementById('pokemon-input').value = ''; // Clear the input field
+      document.getElementById('feedback').textContent = ''; // Clear feedback
+    }
+    
+    document.getElementById('pokemon-input').addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    checkAnswer();
+  }
+});
+  </script>
+
+</body>
+</html>
